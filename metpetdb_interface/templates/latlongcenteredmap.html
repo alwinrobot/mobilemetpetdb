@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+  <script>
+    window.longlats_freal = [];
+    window.names_freal = [];
+    window.rock_type_freal = [];
+    window.sampleid_freal = [];
+  </script>
+  {% for sample in smpnec %}
+    <script>
+    // console.log("{{sample}}")
+    var samplenames = "{{sample['number']}}"
+    // console.log(samplenames) 
+    var sample = "{{sample['location']}}"
+    var samplerocktype = "{{sample['rock_type']['rock_type']}}"
+    var samplesampleid = "{{sample['sample_id']}}"
+    console.log(samplesampleid) 
+    //console.log(sample);    
+    var regExp = /\(([^)]+)\)/;
+    var longlats = regExp.exec(sample);
+    // console.log(longlats[0]);
+    names_freal.push(samplenames)
+    longlats_freal.push(longlats[1])
+    rock_type_freal.push(samplerocktype)
+    sampleid_freal.push(samplesampleid)
+    </script>
+  {% endfor %}
+  <head>
+    <title>Simple Map</title>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+       #wrapper { position: absolute; top: 0; left: 0; }
+       .overlap { position: relative }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=drawing"></script>
+    <script>
+var map;
+
+if ("{{lat}}"){
+  var lat = "{{lat}}";
+  var lng = "{{lng}}";
+}
+else{
+  var lat = 0;
+  var lng = 0;
+}  
+
+
+var rad = "{{rad}}";
+
+/*var frm = google.maps.event.addListener(document.getElementById('map-canvas'), 'click', function() {
+    $.ajax({
+          type: frm.attr('method'),
+          url: frm.attr('/mobilemap/'),
+          data: frm.serialize(),
+          success: function (data) {
+                $("#results").html("");
+                $("#results").html(data);
+                $('#spinner').hide();
+            } 
+  })  
+  
+})*/
+function convertToLinks(text) {
+var replaceText, replacePattern1;
+ 
+//URLs starting with http://, https://
+replacePattern1 = /(\b(https?):\/\/[-A-Z0-9+&amp;@#\/%?=~_|!:,.;]*[-A-Z0-9+&amp;@#\/%=~_|])/ig;
+replacedText = text.replace(replacePattern1, '<a class="colored-link-1" title="$1" href="$1" target="_blank">$1</a>');
+ 
+//URLs starting with "www."
+replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+replacedText = replacedText.replace(replacePattern2, '$1<a class="colored-link-1" href="http://$2" target="_blank">$2</a>');
+ 
+//returns the text result
+ 
+return replacedText;
+}
+
+function initialize() {
+  var mapOptions = {
+    zoom: 6,
+    center: new google.maps.LatLng(lat, lng)
+  };
+  map = new google.maps.Map(document.getElementById('map-canvas'),
+      mapOptions);
+ /* var marker = new google.maps.Marker({
+    map: map,
+    position: new google.maps.LatLng(lat, lng),
+    title: 'Some location'
+  });*/
+  
+  infowindow = new google.maps.InfoWindow();
+  for (i = 0; i < longlats_freal.length; i++)
+  {
+     // console.log(longlats_freal[i]);
+    // console.log(names_freal[i]);
+    // console.log(rock_type_freal[i]);
+     longlats_freal_freal = [];
+     longlats_freal_freal = (longlats_freal[i].split(" "));
+/*     console.log(longlats_freal_freal[0]);
+     console.log(longlats_freal_freal[1]);*/
+     /*var infowindow = new google.maps.InfoWindow({
+      content: "test"
+    });*/
+     var marker = new google.maps.Marker({
+        position: new google.maps.LatLng((longlats_freal_freal[1]), (longlats_freal_freal[0])),
+        map: map,
+        title: names_freal[i]
+     });
+
+    google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+
+          infowindow.setContent("<h2><b>Sample Number: </b>" + names_freal[i] +"</h2>"+"<b>Sample ID: </b>" + sampleid_freal[i] + "  ||  " + "<b>Rock Type: </b>" + rock_type_freal[i] + "  ||  " + "<b>Link To: </b>" +
+            "<a href = http://54.164.222.32/api/v1/sample/?format=json&number=" + names_freal[i] + ">" + "http://54.164.222.32/api/v1/sample/?format=json&number=" + names_freal[i] + "</a>");  
+          infowindow.open(map,marker);
+        }
+    })(marker, i));
+  }
+
+  
+
+  var circle = new google.maps.Circle({
+    map: map,
+    center: new google.maps.LatLng(lat, lng),
+    radius: 1609.3*rad,    // feet * radius 
+     strokeColor: '#FF0000',
+      strokeOpacity: 0.8,
+      strokeWeight: 16,
+      fillColor: '#FF0000',
+      fillOpacity: 0.35
+  });
+  circle.setOptions({visible:false});
+  map.fitBounds(circle.getBounds());
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+  </head>
+  <body>
+    
+      <div class="navbar">
+          <nav role="navigation" class="navbar navbar-default">
+              <!-- Brand and toggle get grouped for better mobile display -->
+              <div class="navbar-header">
+                  <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                      <span class="sr-only">Toggle navigation</span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                  </button>
+                  <a href="/latlong/" class="navbar-brand">MetPetDB</a>
+              </div>
+              <!-- Collection of nav links and other content for toggling -->
+              <div id="navbarCollapse" class="collapse navbar-collapse">
+                  <ul class="nav navbar-nav">
+                      <li><a href="/latlong/">Home</a></li>
+                      <li><a href="/radius/">Back</a></li>
+                      <li><a>Results: <script type="text/javascript"> document.write(names_freal.length) </script> </a></li>
+                  </ul>
+              </div>
+          </nav>
+      </div>
+      
+      <div id="map-canvas"></div>
+  </body>
+</html>

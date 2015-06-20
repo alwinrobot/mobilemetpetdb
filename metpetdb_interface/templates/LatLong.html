@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset = "utf-8">
+  <title> Search </title>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+  <style>
+
+  </style>
+
+</head>
+
+<script>
+ document.getElementById('latlong').submit(function(e){
+  e.preventDefault();
+   console.log("dsadsa");
+   // window.location = "/mobilemap/";
+   return false; 
+ });
+</script> 
+
+<body>
+  <ul>
+    <li> <a href = "/latlong/"> Home </a> </li>
+
+  </ul>
+
+  <header>
+  </header>
+    <div class = "container">
+      <div class= "jumbotron">
+        <div class = "page header">
+          <h1> Input Coordinates </h1>
+        </div>
+        <form action = "/radius/" id = "latlong" role = "form" method="GET">
+          <div class = "form-group">
+            <label for = "Latitude"> Latitude: </label>
+            <input name = "Latitude" type = "Latitude" class = "form-control" id = "Latitude">
+          </div>
+          <div class = "form-group">
+            <label for = "Longitude"> Longitude: </label>
+            <input name = "Latitude" type = "Longitude" class = "form-control" id = "Longitude">
+          </div>
+          <button type= "submit" class = "btn btn-info"> Submit </button>
+
+          <div class = "page header">
+            <h1> OR </h1>
+          </div>
+
+          <a href="#" class="btn btn-info" role="button">Select Coordinates Using Map</a>
+       
+        </form>
+      </div>
+    </div>
+  <footer>
+  </footer>
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+</body>
+</html>
