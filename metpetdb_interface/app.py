@@ -60,6 +60,14 @@ def mobilemap():
         return render_template('latlongcenteredmap.html', smpnec = (samplesnecess), lat = request.args.get("Latitude"), lng = request.args.get("Longitude"), rad = request.args.get("radius"))
     elif (request.args.get("Latitude") == "None" or request.args.get("Latitude") == 0):   
         return render_template('latlongcenteredmap.html', rad = request.args.get("radius"))
+
+@app.route('/full_list/', methods=["GET", "POST"])
+def full_list():
+    print request.args
+    return render_template('full_list.html')
+
+
+
 @app.route('/search/')
 def search():
     print "REQ ARGS"
